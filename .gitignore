@@ -1,0 +1,138 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+
+
+# ===========================
+# Python / Django
+# ===========================
+
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Django
+*.log
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Migrations (optional)
+# Uncomment ONLY if you don't want to track migrations
+# **/migrations/
+# !**/migrations/__init__.py
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.cache/
+
+# Type checkers
+.mypy_cache/
+.pyre/
+.ruff_cache/
+
+# ===========================
+# Flutter / Dart
+# ===========================
+
+.dart_tool/
+.packages
+.pub/
+build/
+
+# Flutter generated
+.flutter-plugins
+.flutter-plugins-dependencies
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Android
+**/android/.gradle/
+**/android/local.properties
+**/android/captures/
+
+# iOS
+**/ios/Pods/
+**/ios/.symlinks/
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/App.framework
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/flutter_export_environment.sh
+
+# macOS
+**/macos/Flutter/ephemeral/
+
+# Linux
+**/linux/flutter/ephemeral/
+
+# Windows
+**/windows/flutter/ephemeral/
+
+# Web
+**/build/web/
+
+# ===========================
+# IDEs
+# ===========================
+
+.vscode/
+.idea/
+*.iml
+
+# ===========================
+# OS Files
+# ===========================
+
+.DS_Store
+Thumbs.db
+
+# ===========================
+# Secrets / Keys
+# ===========================
+
+*.pem
+*.key
+*.crt
+*.p12
+*.jks
+*.keystore
+google-services.json
+GoogleService-Info.plist
+
+# ===========================
+# Logs
+# ===========================
+
+*.log
+logs/
+
+# ===========================
+# Temporary Files
+# ===========================
+
+*.swp
+*.swo
+*.tmp
+*.bak
