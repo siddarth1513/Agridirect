@@ -1,0 +1,7 @@
+test_id,page,element_id,expected_text
+TC_001,index.html,section-1,Welcome
+TC_002,index.html,section-2,Features
+TC_003,index.html,section-3,Get Started
+TC_004,about.html,about-section,About Us
+TC_005,contact.html,contact-section,Contact Us
+TC_006,dashboard.html,dashboard-section,Dashboard

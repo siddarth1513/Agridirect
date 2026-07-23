@@ -1,0 +1,14 @@
+{
+  "name": "farmers-app-selenium-suite",
+  "version": "1.0.0",
+  "description": "Selenium E2E Test Suite for Farmers App Web Application - 300 Test Cases",
+  "private": true,
+  "scripts": {
+    "test": "node scripts/run_selenium_tests.js",
+    "report": "node scripts/generate_reports.js",
+    "full-suite": "node scripts/run_selenium_tests.js && node scripts/generate_reports.js"
+  },
+  "devDependencies": {
+    "exceljs": "^4.4.0"
+  }
+}
