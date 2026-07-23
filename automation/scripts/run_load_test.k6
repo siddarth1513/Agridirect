@@ -1,0 +1,17 @@
+// run_load_test.k6
+import http from 'k6/http';
+import { check, sleep } from 'k6';
+
+export const options = {
+  vus: 100,
+  duration: '1m',
+};
+
+export default function () {
+  const url = __ENV.BASE_URL || 'https://example.com/api/health';
+  const res = http.get(url);
+  // basic check to ensure request succeeded
+  check(res, { 'status is 200': (r) => r.status === 200 });
+  // small pause to simulate realistic pacing
+  sleep(0.1);
+}
