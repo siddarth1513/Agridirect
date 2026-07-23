@@ -97,10 +97,10 @@ for i in range(25):
         # contains letters
         phone_scenarios.append((f"phone123_{i}", False))
 
-def make_phone_test(phone, is_valid):
+def make_phone_test(phone, is_valid, test_idx):
     def test_phone(self):
         data = {
-            "email": f"phone_val_test_{idx_val}@example.com",
+            "email": f"phone_val_test_{test_idx}@example.com",
             "password": "StrongPasswordSecure123!",
             "phone_number": phone,
             "role": "BUYER"
@@ -113,7 +113,7 @@ def make_phone_test(phone, is_valid):
     return test_phone
 
 for idx_val, (phone, is_valid) in enumerate(phone_scenarios):
-    setattr(ParameterizedPhoneValidationTests, f"test_phone_val_{idx_val}", make_phone_test(phone, is_valid))
+    setattr(ParameterizedPhoneValidationTests, f"test_phone_val_{idx_val}", make_phone_test(phone, is_valid, idx_val))
 
 
 class ParameterizedCoordinateValidationTests(APITestCase):
@@ -139,9 +139,9 @@ for i in range(25):
         lon = 185.0 + i
     coordinate_scenarios.append((lat, lon, False))
 
-def make_coordinate_test(lat, lon, is_valid):
+def make_coordinate_test(lat, lon, is_valid, test_idx):
     def test_coordinate(self):
-        email = f"coord_val_test_{idx_coord}@example.com"
+        email = f"coord_val_test_{test_idx}@example.com"
         data = {
             "email": email,
             "password": "StrongPasswordSecure123!",
@@ -167,7 +167,7 @@ def make_coordinate_test(lat, lon, is_valid):
     return test_coordinate
 
 for idx_coord, (lat, lon, is_valid) in enumerate(coordinate_scenarios):
-    setattr(ParameterizedCoordinateValidationTests, f"test_coord_val_{idx_coord}", make_coordinate_test(lat, lon, is_valid))
+    setattr(ParameterizedCoordinateValidationTests, f"test_coord_val_{idx_coord}", make_coordinate_test(lat, lon, is_valid, idx_coord))
 
 
 class ParameterizedModelConstraintValidationTests(TestCase):
