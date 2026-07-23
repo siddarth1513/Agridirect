@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-h*rj7y-dp3gb40gxuvi$bz0oq^jv09plo+y#xie97-$16)1tp!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '10.0.2.2', '*']
 
 
 # Application definition
@@ -96,7 +96,7 @@ DATABASES = {
     }
 }
 
-if 'test' in sys.argv or 'test_coverage' in sys.argv or any('run_tests' in arg for arg in sys.argv):
+if 'test' in sys.argv or 'test_coverage' in sys.argv or any('run_tests' in arg or 'run_validation_tests' in arg or 'run_deployment_tests' in arg or 'run_load_tests' in arg for arg in sys.argv):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',

@@ -129,10 +129,9 @@ GoogleService-Info.plist
 logs/
 
 # ===========================
-# Temporary Files
+# Generated Test Outputs
 # ===========================
 
-*.swp
-*.swo
-*.tmp
-*.bak
+*.xlsx
+baseline_load_results*
+frontend/build_old/

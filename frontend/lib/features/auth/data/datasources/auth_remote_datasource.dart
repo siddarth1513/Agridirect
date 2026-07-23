@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import '../models/user_model.dart';
 
@@ -33,7 +34,21 @@ class AuthRemoteDataSource {
         'email': email,
         'password': password,
       });
-      return response.data;
+      
+      final data = response.data;
+      if (data is Map<String, dynamic>) {
+        return data;
+      } else if (data is Map) {
+        return Map<String, dynamic>.from(data);
+      } else if (data is String) {
+        try {
+          final decoded = jsonDecode(data);
+          if (decoded is Map) {
+            return Map<String, dynamic>.from(decoded);
+          }
+        } catch (_) {}
+      }
+      throw Exception('Invalid response format received from server.');
     } on DioException catch (e) {
       throw Exception(_extractErrorMessage(e.response?.data, 'Login failed. Please check your email and password.'));
     }

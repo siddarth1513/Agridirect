@@ -20,6 +20,18 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(list(e.messages))
         return value
 
+    def validate_phone_number(self, value):
+        if value:
+            import re
+            cleaned = re.sub(r'[\s\-\(\)]', '', value)
+            if cleaned.startswith('+'):
+                digits_only = cleaned[1:]
+            else:
+                digits_only = cleaned
+            if not digits_only.isdigit() or not (5 <= len(digits_only) <= 15):
+                raise serializers.ValidationError("Phone number must contain between 5 and 15 digits.")
+        return value
+
     def create(self, validated_data):
         user = User.objects.create_user(
             email=validated_data['email'],

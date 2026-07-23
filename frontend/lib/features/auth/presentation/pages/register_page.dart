@@ -35,15 +35,6 @@ class _RegisterPageState extends ConsumerState<RegisterPage> {
             phoneNumber: _phoneController.text.trim(),
             role: _selectedRole,
           );
-      Future.delayed(const Duration(milliseconds: 600), () {
-        if (mounted && ref.read(authProvider).status != AuthStatus.authenticated) {
-          if (_selectedRole == 'FARMER') {
-            context.go('/farmer-home');
-          } else {
-            context.go('/buyer-home');
-          }
-        }
-      });
     }
   }
 

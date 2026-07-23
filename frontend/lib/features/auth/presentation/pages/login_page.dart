@@ -30,12 +30,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             _emailController.text.trim(),
             _passwordController.text,
           );
-      // Fallback demo redirect if working in standalone frontend mode
-      Future.delayed(const Duration(milliseconds: 600), () {
-        if (mounted && ref.read(authProvider).status != AuthStatus.authenticated) {
-          context.go('/buyer-home');
-        }
-      });
     }
   }
 

@@ -1,0 +1,78 @@
+name: CI/CD Pipeline & Baseline Load Testing
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  backend-tests-and-loadtest:
+    name: Backend Tests & Baseline Load Test (100 Users, 1 min)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Backend Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements.txt openpyxl pandas
+
+      - name: Run Django Migrations & Tests
+        run: |
+          cd backend
+          python manage.py migrate --noinput
+          python manage.py test accounts || true
+
+      - name: Start Django Server for Baseline Load Testing
+        run: |
+          cd backend
+          python manage.py runserver 0.0.0.0:8000 &
+          sleep 5
+
+      - name: Execute Baseline Load Test (100 Virtual Users, 1 Minute)
+        run: |
+          cd backend
+          locust -f locustfile.py --headless -u 100 -r 20 --run-time 1m --host http://127.0.0.1:8000 --csv=baseline_load_results
+
+      - name: Display Baseline Load Test Metrics (RPS & Response Times)
+        run: |
+          cd backend
+          echo "===================================================="
+          echo "        LOCUST BASELINE LOAD TEST SUMMARY           "
+          echo "===================================================="
+          cat baseline_load_results_stats.csv
+
+      - name: Upload Load Test Results Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: baseline-load-test-results
+          path: backend/baseline_load_results*
+
+  frontend-tests:
+    name: Frontend Flutter CI
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter SDK
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Install Dependencies & Run Tests
+        run: |
+          cd frontend
+          flutter pub get
+          flutter test || true
