@@ -214,7 +214,7 @@ const DESCS = {
     'Verify network error on save shows error toast',
     'Verify cancel edit reverts to original values',
     'Verify profile role badge colour matches role',
-    'Verify editing another user's profile is not possible',
+    'Verify editing another user\\'s profile is not possible',
     'Verify profile screen back button works correctly',
   ],
   NAV: [
