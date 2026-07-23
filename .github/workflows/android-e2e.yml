@@ -1,0 +1,91 @@
+name: Android Appium E2E CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v2
+        with:
+          api-level: 33
+          target: google_apis
+          arch: x86_64
+
+      - name: Install Gradle Wrapper
+        run: ./gradlew wrapper --gradle-version 7.6
+
+      - name: Build debug APK
+        run: ./gradlew assembleDebug
+
+      - name: Start Android Emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 33
+          target: google_apis
+          arch: x86_64
+          script: echo "Emulator started"
+
+      - name: Install Appium
+        run: npm install -g appium
+
+      - name: Start Appium Server
+        run: appium &
+        env:
+          APPIUM_LOG_FILE: ${{ runner.temp }}/appium.log
+
+      - name: Wait for Appium to be ready
+        run: sleep 15
+
+      - name: Install APK on emulator
+        run: |
+          # Adjust the path to your generated APK if different
+          APK_PATH=$(find . -type f -name "*debug.apk" | head -n 1)
+          if [ -z "$APK_PATH" ]; then
+            echo "APK not found" && exit 1
+          fi
+          adb install -r "$APK_PATH"
+
+      - name: Run Appium tests
+        run: mvn test -Dtest=AppiumTestSuite
+
+      - name: Archive screenshots and logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: appium-reports
+          path: |
+            automation/screenshots/**
+            automation/logs/**
+            automation/reports/**
+
+      - name: Publish reports to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: automation/reports
+          destination_dir: reports/${{ github.run_number }}
+          keep_files: false
+
+      - name: Summarize results
+        if: always()
+        run: |
+          echo "# Android Appium E2E Execution Summary" >> $GITHUB_STEP_SUMMARY
+          echo "Run Number: ${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
+          echo "Status: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
