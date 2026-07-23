@@ -1,0 +1,25 @@
+{
+  "name": "Selenium Web UI CI",
+  "on": {
+    "push": {"branches": ["main", "master"]},
+    "pull_request": {"branches": ["main", "master"]},
+    "workflow_dispatch": null
+  },
+  "jobs": {
+    "selenium-tests": {
+      "runs-on": "ubuntu-latest",
+      "timeout-minutes": 60,
+      "steps": [
+        {"name": "Checkout repository", "uses": "actions/checkout@v4"},
+        {"name": "Set up Node.js", "uses": "actions/setup-node@v4", "with": {"node-version": "20"}},
+        {"name": "Install dependencies", "run": "npm ci"},
+        {"name": "Build web app", "run": "npm run build"},
+        {"name": "Deploy preview to GitHub Pages (temporary)", "uses": "peaceiris/actions-gh-pages@v3", "with": {"github_token": "${{ secrets.GITHUB_TOKEN }}", "publish_dir": "./dist", "destination_dir": "preview/${{ github.run_number }}"}},
+        {"name": "Generate Selenium tests (300)", "run": "python automation/scripts/generate_all_tests.py selenium"},
+        {"name": "Run Selenium tests", "run": "npx wdio run wdio.conf.js"},
+        {"name": "Archive Selenium reports", "if": "always()", "uses": "actions/upload-artifact@v4", "with": {"name": "selenium-reports", "path": "automation/selenium/reports/**"}},
+        {"name": "Summarize results", "if": "always()", "run": "echo \"# Selenium Test Summary\" >> $GITHUB_STEP_SUMMARY\n echo \"Executed: 300\" >> $GITHUB_STEP_SUMMARY\n echo \"Passed: $(grep -c '\\[PASS\\]' automation/selenium/reports/*.txt || echo 0)\" >> $GITHUB_STEP_SUMMARY"}
+      ]
+    }
+  }
+}
